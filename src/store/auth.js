@@ -78,6 +78,21 @@ const actions = {
             return 'failed 2'
         })
     },
+    checkToken3 () {
+        const pathname = window.location.pathname
+        axios.get('/check-token')
+        .then(res => {
+            if (pathname == '/') {
+                router.replace('/home')
+            }
+        })
+        .catch(error => {
+            if (pathname != '/') {
+                router.replace('/')
+            }
+            // console.log(error.response);
+        })
+    },
     logout({commit}) {
         axios.post('/logout')
         .then(res => {

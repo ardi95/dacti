@@ -41,7 +41,6 @@ export default new Router({
                 'footer': () => import('./components/Footer.vue')
             },
             beforeEnter(to, from, next) {
-
                 store.dispatch('checkToken').then(response => {
                     if (response == 'success') {
                         next()
@@ -50,7 +49,6 @@ export default new Router({
                         next('/')
                     }
                 }, error => {
-                    // console.log('masuk bawah');
                     next('/')
                 })
             }

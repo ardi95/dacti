@@ -11,8 +11,8 @@ import './registerServiceWorker'
 Vue.use(Vuelidate)
 
 Vue.config.productionTip = false
-// axios.defaults.baseURL = 'https://temparanapi.aranproduk.com'
-axios.defaults.baseURL = 'http://localhost:8000/api'
+axios.defaults.baseURL = 'https://apiportfolio2.aranproduk.com/api'
+// axios.defaults.baseURL = 'http://localhost:8000/api'
 
 axios.interceptors.request.use(config => {
     config.headers.common['Authorization'] = $cookies.get("token");

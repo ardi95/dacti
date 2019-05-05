@@ -17,6 +17,10 @@
 export default {
     created() {
         this.$store.dispatch('reloadPage')
+        // this.$store.dispatch('checkToken3')
+    },
+    updated() {
+        // this.$store.dispatch('checkToken3')
     }
 }
 </script>
