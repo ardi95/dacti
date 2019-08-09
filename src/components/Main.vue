@@ -6,19 +6,8 @@
                     <v-flex lg12>
                         <v-card class="card-header">
                             <v-container>
-                                <h4 class="display-1">Users</h4>
-                                <v-divider></v-divider>
-                                <v-breadcrumbs :items="breadcumbs">
-                                    <template v-slot:divider>
-                                        <v-icon>forward</v-icon>
-                                    </template>
-                                    <template v-slot:item="props">
-                                        <router-link
-                                        tag="a"
-                                        :to="props.item.href"
-                                        :class="[props.item.disabled && 'disabled']">{{ props.item.text }}</router-link>
-                                    </template>
-                                </v-breadcrumbs>
+                                <app-title v-if="showTitle"></app-title>
+                                <app-breadcumb v-if="showBreadcrumbs"></app-breadcumb>
                             </v-container>
                         </v-card>
                         <v-card>
@@ -39,6 +28,9 @@
 </template>
 
 <script>
+import Title from './Title.vue'
+import Breadcumb from './Breadcumb.vue'
+
 export default {
     data() {
         return {
@@ -46,8 +38,11 @@ export default {
         }
     },
     computed: {
-        breadcumbs() {
-            return this.$store.getters.breadcumbUsers
+        showTitle() {
+            return this.$route.matched[0].meta.showTitle
+        },
+        showBreadcrumbs() {
+            return this.$route.meta.showBreadcrumbs
         }
     },
     updated() {
@@ -72,26 +67,11 @@ export default {
         // }
     },
     mounted() {
-        console.log(this.$route.matched[0].name);
-        // this.$store.dispatch('createBreadcumbUsers')
-        // if (this.$route.name == 'userEdit') {
-        //     console.log('masuk sini');
-        //     let arrBreadcumbs = []
-        //     arrBreadcumbs = this.$route.meta.breadcrumbs
-        //
-        //     let dataid = {
-        //         text: this.$route.params.id,
-        //         disabled: true,
-        //         href: '/users/edit/'
-        //     }
-        //
-        //     arrBreadcumbs.push(dataid)
-        //
-        //     this.breadcumbs = arrBreadcumbs
-        // }
-        // else {
-        //     this.breadcumbs = this.$route.meta.breadcrumbs
-        // }
+        // console.log(this.$route.matched[0].name);
+    },
+    components: {
+        appTitle: Title,
+        appBreadcumb: Breadcumb
     }
 }
 </script>
@@ -99,9 +79,5 @@ export default {
 <style scoped>
 .card-header {
     margin-bottom: 20px;
-}
-.disabled {
-    color: grey;
-    pointer-events: none;
 }
 </style>

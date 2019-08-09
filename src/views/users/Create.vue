@@ -1,7 +1,31 @@
 <template>
     <div>
-        <v-form>
+        <v-form @submit.prevent="submitUser">
             <v-container grid-list-xl>
+                <v-layout row wrap>
+                    <v-flex md8>
+                        <v-alert
+                            v-model="successResultUser"
+                            type="success"
+                            dismissible
+                            outline
+                        >
+                            Successfully add data user.
+                        </v-alert>
+                        <v-alert
+                            v-model="errorResultUser"
+                            type="error"
+                            dismissible
+                            outline
+                        >
+                            <ul>
+                                <li v-for="error in errorMessageUser">
+                                    {{ error }}
+                                </li>
+                            </ul>
+                        </v-alert>
+                    </v-flex>
+                </v-layout>
                 <v-layout row wrap>
                     <v-flex md6>
                         <!-- USERNAME -->
@@ -27,6 +51,9 @@
                         :append-icon="fieldPassword ? 'visibility' : 'visibility_off'"
                         :type="fieldPassword ? 'text' : 'password'"
                         @click:append="fieldPassword = !fieldPassword"
+                        :error-messages="passwordErrors"
+                        @input="$v.password.$touch()"
+                        @blur="$v.password.$touch()"
                         required>
                         </v-text-field>
                         <!-- PASSWORD -->
@@ -37,6 +64,9 @@
                         outline
                         label="Name"
                         prepend-inner-icon="person"
+                        :error-messages="nameErrors"
+                        @input="$v.name.$touch()"
+                        @blur="$v.name.$touch()"
                         required>
                         </v-text-field>
                         <!-- Name -->
@@ -54,7 +84,7 @@
                         <!-- ROLE -->
                         <v-select
                         v-model="role"
-                        :items="itemsRole"
+                        :items="isItemRole"
                         chips
                         label="Roles"
                         multiple
@@ -93,12 +123,12 @@
                         <!-- PHOTO -->
 
                         <!-- SAMPLE PHOTO -->
-                        <div class="title mb-1">Photo: (300 x 300)</div>
+                        <div class="title mb-1">Photo: (128 x 128)</div>
                         <div class="div-image">
                             <v-img
                                 :src="imageUrl"
-                                height="300"
-                                width="300"
+                                height="128"
+                                width="128"
                             ></v-img>
                         </div>
                         <!-- SAMPLE PHOTO -->
@@ -160,23 +190,113 @@ export default {
             this.imageUrl = ''
             this.imageFile = ''
             this.closeImage = false
+        },
+        submitUser() {
+            let formData = new FormData()
+            let arrayRole = this.role
+            let role = []
+            let a = 0
+
+            arrayRole.forEach(ar => {
+                formData.append('role[' + a + ']', ar)
+                a++
+            });
+
+            formData.append('email', this.username)
+            formData.append('password', this.password)
+            formData.append('name', this.name)
+            formData.append('no_pegawai', this.no_pegawai)
+            formData.append('status', this.isActive)
+            formData.append('photo', this.imageFile)
+
+            axios.post('/users', formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then(res => {
+                this.$store.dispatch('openSuccessUser')
+                this.username = '',
+                this.password = '',
+                this.name = '',
+                this.no_pegawai = '',
+                this.imageName = '',
+                this.imageFile = '',
+                this.imageUrl = '',
+                this.role = [],
+                this.closeImage = false,
+                this.isActive = false,
+                this.fieldPassword = false
+                // this.$v.username.$error = false
+                this.$nextTick(() => { this.$v.$reset() })
+                return
+            })
+            .catch(error => {
+                const dataError = error.response.data.errors
+                // console.log(dataError);
+                this.$store.dispatch('openErrorUser', dataError)
+                // console.log(dataError);
+                return
+            })
         }
     },
     created () {
-        axios.get('/users/create')
-        .then(res => {
-            const data = res.data
-            this.itemsRole = data
-        })
-        .catch(error => {
-        })
+        this.$store.dispatch('getRole')
     },
+    // updated () {
+    //     console.log('masuk update')
+    // },
     computed: {
+        isItemRole() {
+            return this.$store.getters.isRole
+        },
         usernameErrors() {
+            // const errors = []
+            // if (!this.$v.username.$dirty) return errors
+            // !this.$v.username.required && errors.push('Username is required')
+            // return errors
+            if (this.$v.username.$error) {
+                if (!this.$v.username.required) {
+                    return 'Username is required'
+                }
+            }
+        },
+        passwordErrors() {
             const errors = []
-            if (!this.$v.username.$dirty) return errors
-            !this.$v.username.required && errors.push('Username is required')
+            if (!this.$v.password.$dirty) return errors
+            !this.$v.password.required && errors.push('Password is required')
+            !this.$v.password.minLen && errors.push('minimum of 8 characters')
             return errors
+        },
+        nameErrors() {
+            const errors = []
+            if (!this.$v.name.$dirty) return errors
+            !this.$v.name.required && errors.push('Name is required')
+            return errors
+        },
+        errorResultUser: {
+            get() {
+                return this.$store.getters.errorResultUser
+            },
+            set(v) {
+                if (!v) {
+                    this.$store.dispatch('closeErrorUser')
+                }
+            }
+        },
+        successResultUser: {
+            get() {
+                return this.$store.getters.successResultUser
+            },
+            set(v) {
+                if (!v) {
+                    this.$store.dispatch('closeSuccessUser')
+                }
+            }
+        },
+        errorMessageUser() {
+            return this.$store.getters.errorMessageUser
         }
     },
     validations: {
@@ -185,7 +305,10 @@ export default {
         },
         password: {
             required,
-            minLen: minLength(6)
+            minLen: minLength(8)
+        },
+        name: {
+            required
         }
     }
 }

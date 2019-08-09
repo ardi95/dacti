@@ -53,7 +53,7 @@
                                 <!-- PASSWORD -->
 
                                 <div class="text-xs-right font-weight-bold">
-                                    <v-btn type="submit" round outline color="primary" dark>Login</v-btn>
+                                    <v-btn type="submit" round outline color="primary" :disabled="$v.$invalid">Login</v-btn>
                                 </div>
                             </form>
                         </v-card>

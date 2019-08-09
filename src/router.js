@@ -7,7 +7,7 @@ import store from './store'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
     mode: 'history',
     base: process.env.BASE_URL,
     routes: [
@@ -22,6 +22,7 @@ export default new Router({
             beforeEnter(to, from, next) {
                 store.dispatch('checkToken').then(response => {
                     if (response == 'success') {
+                        console.log('masuk sini');
                         next('/home')
                     }
                     else {
@@ -51,12 +52,17 @@ export default new Router({
                 }, error => {
                     next('/')
                 })
+                // next()
             }
         },
         {
             path: '/users',
+            meta: {
+                showTitle: true,
+                title: 'Users'
+            },
             components: {
-                default: () => import('./views/users/Main.vue'),
+                default: () => import('./components/Main.vue'),
                 'header': () => import('./components/Header.vue'),
                 'footer': () => import('./components/Footer.vue')
             },
@@ -64,6 +70,7 @@ export default new Router({
                 {
                     path: '',
                     meta: {
+                        showBreadcrumbs: true,
                         breadcrumbs: [
                             {
                                 text: 'Users',
@@ -84,11 +91,13 @@ export default new Router({
                         }, error => {
                             next('/')
                         })
+                        // next()
                     }
                 },
                 {
                     path: 'create',
                     meta: {
+                        showBreadcrumbs: true,
                         breadcrumbs: [
                             {
                                 text: 'Users',
@@ -115,8 +124,48 @@ export default new Router({
                             next('/')
                         })
                     }
+                },
+                {
+                    path: 'edit/:id',
+                    name: 'userEdit',
+                    meta: {
+                        breadcumbDynamic: true,
+                        showBreadcrumbs: true,
+                        breadcrumbs: [
+                            {
+                                text: 'Users',
+                                disabled: false,
+                                href: '/users'
+                            },
+                            {
+                                text: 'Edit',
+                                disabled: true,
+                                href: '/users/edit/'
+                            }
+                        ]
+                    },
+                    component: () => import('./views/users/Edit.vue'),
+                    beforeEnter(to, from, next) {
+                        store.dispatch('checkToken').then(response => {
+                            if (response == 'success') {
+                                next()
+                            }
+                            else {
+                                next('/')
+                            }
+                        }, error => {
+                            next('/')
+                        })
+                    }
                 }
             ]
         }
     ]
 })
+
+router.afterEach((to, from) => {
+    store.dispatch('createTitle')
+    store.dispatch('createBreadcrumb')
+})
+
+export default router

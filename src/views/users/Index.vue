@@ -35,6 +35,18 @@
                     <template v-slot:items="props">
                         <td>{{ props.item.name }}</td>
                         <td>{{ props.item.email }}</td>
+                        <td>
+                            <v-btn fab outline
+                            color="warning"
+                            @click="viewEdit(props.item.id)">
+                                <v-icon dark>edit</v-icon>
+                            </v-btn>
+                            <v-btn fab outline
+                            color="error"
+                            to="/users/create">
+                                <v-icon dark>delete</v-icon>
+                            </v-btn>
+                        </td>
                     </template>
                 </v-data-table>
             </v-flex>
@@ -44,6 +56,7 @@
 
 <script>
 import axios from 'axios'
+import router from '../../router'
 
 export default {
     data () {
@@ -56,7 +69,8 @@ export default {
             pagination: {},
             headers: [
                 { text: 'Name', value: 'name', sortable: false, },
-                { text: 'Username', value: 'email', sortable: false, }
+                { text: 'Username', value: 'email', sortable: false, },
+                { text: 'Actions', value: 'name', sortable: false }
             ]
         }
     },
@@ -88,12 +102,12 @@ export default {
         }
     },
     mounted () {
-        let checkCall = 'nosearch'
-        this.getDataFromApi(checkCall)
-        .then(data => {
-            this.desserts = data.items
-            this.totalDesserts = data.total
-        })
+        // let checkCall = 'nosearch'
+        // this.getDataFromApi(checkCall)
+        // .then(data => {
+        //     this.desserts = data.items
+        //     this.totalDesserts = data.total
+        // })
     },
     methods: {
         updatePaginationSearch () {
@@ -126,8 +140,11 @@ export default {
                         items,
                         total
                     })
-                }, 2000)
+                }, 3000)
             })
+        },
+        viewEdit(id) {
+            router.push('users/edit/' + id)
         }
     }
 }
