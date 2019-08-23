@@ -12,15 +12,15 @@ const mutations = {
     },
     mutationCreateBreadcrumb(state) {
         let tempStateBreadcrumbs = router.currentRoute.meta.breadcrumbs
-        if (router.currentRoute.meta.breadcumbDynamic  == true) {
-            let idDynamic = {
-                text: router.currentRoute.params.id,
-                disabled: true,
-                href: '/users/edit/'
-            }
-
-            tempStateBreadcrumbs.push(idDynamic)
-        }
+        // if (router.currentRoute.meta.breadcumbDynamic  == true) {
+        //     let idDynamic = {
+        //         text: router.currentRoute.params.id,
+        //         disabled: true,
+        //         href: '/users/edit/'
+        //     }
+        //
+        //     tempStateBreadcrumbs.push(idDynamic)
+        // }
         state.breadcrumbs = tempStateBreadcrumbs
 
     }

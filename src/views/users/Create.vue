@@ -67,7 +67,8 @@
                         :error-messages="nameErrors"
                         @input="$v.name.$touch()"
                         @blur="$v.name.$touch()"
-                        required>
+                        required
+                        name="name">
                         </v-text-field>
                         <!-- Name -->
 
@@ -77,7 +78,8 @@
                         outline
                         label="No Pegawai"
                         prepend-inner-icon="far fa-id-card"
-                        required>
+                        required
+                        name="no_pegawai">
                         </v-text-field>
                         <!-- NOPEGAWAI -->
 
@@ -169,9 +171,19 @@ export default {
     },
     methods: {
         pickFile () {
+            console.log(this.$refs);
             this.$refs.image.click ()
         },
-        onFilePicked (e) {
+        onFilePicked (event) {
+            // let image = event.target;
+            // if (image.files && image.files[0]) {
+            //     let reader = new FileReader();
+            //
+            //     const file = event.target.files[0];
+            //     this.imageUrl = URL.createObjectURL(file);
+            //     this.imageFile = file
+            // }
+
             const files = this.$refs.image.files[0];
             if (files !== undefined) {
                 this.imageName = files.name
@@ -216,6 +228,7 @@ export default {
                 }
             })
             .then(res => {
+                this.$refs.image.value = null
                 this.$store.dispatch('openSuccessUser')
                 this.username = '',
                 this.password = '',
@@ -233,6 +246,7 @@ export default {
                 return
             })
             .catch(error => {
+                console.log(error.response);
                 const dataError = error.response.data.errors
                 // console.log(dataError);
                 this.$store.dispatch('openErrorUser', dataError)

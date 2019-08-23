@@ -20,17 +20,23 @@ const router = new Router({
                 'footer': () => import('./components/Footer.vue')
             },
             beforeEnter(to, from, next) {
-                store.dispatch('checkToken').then(response => {
-                    if (response == 'success') {
-                        console.log('masuk sini');
-                        next('/home')
-                    }
-                    else {
-                        next()
-                    }
-                }, error => {
+                const token = $cookies.get("token")
+                if (!token) {
                     next()
-                })
+                } else {
+                    next('/home')
+                }
+                // store.dispatch('checkToken').then(response => {
+                //     if (response == 'success') {
+                //         console.log('masuk sini');
+                //         next('/home')
+                //     }
+                //     else {
+                //         next()
+                //     }
+                // }, error => {
+                //     next()
+                // })
             }
         },
         {
@@ -42,16 +48,24 @@ const router = new Router({
                 'footer': () => import('./components/Footer.vue')
             },
             beforeEnter(to, from, next) {
-                store.dispatch('checkToken').then(response => {
-                    if (response == 'success') {
-                        next()
-                    }
-                    else {
-                        next('/')
-                    }
-                }, error => {
+                // console.log('ini router');
+                const token = $cookies.get("token")
+                if (!token) {
                     next('/')
-                })
+                } else {
+                    next()
+                }
+                // store.dispatch('checkToken').then(response => {
+                //     console.log(response);
+                //     if (response == 'success') {
+                //         next()
+                //     }
+                //     else {
+                //         next('/')
+                //     }
+                // }, error => {
+                //     next('/')
+                // })
                 // next()
             }
         },
@@ -81,16 +95,22 @@ const router = new Router({
                     },
                     component: () => import('./views/users/Index.vue'),
                     beforeEnter(to, from, next) {
-                        store.dispatch('checkToken').then(response => {
-                            if (response == 'success') {
-                                next()
-                            }
-                            else {
-                                next('/')
-                            }
-                        }, error => {
+                        const token = $cookies.get("token")
+                        if (!token) {
                             next('/')
-                        })
+                        } else {
+                            next()
+                        }
+                        // store.dispatch('checkToken').then(response => {
+                        //     if (response == 'success') {
+                        //         next()
+                        //     }
+                        //     else {
+                        //         next('/')
+                        //     }
+                        // }, error => {
+                        //     next('/')
+                        // })
                         // next()
                     }
                 },
@@ -113,16 +133,22 @@ const router = new Router({
                     },
                     component: () => import('./views/users/Create.vue'),
                     beforeEnter(to, from, next) {
-                        store.dispatch('checkToken').then(response => {
-                            if (response == 'success') {
-                                next()
-                            }
-                            else {
-                                next('/')
-                            }
-                        }, error => {
+                        const token = $cookies.get("token")
+                        if (!token) {
                             next('/')
-                        })
+                        } else {
+                            next()
+                        }
+                        // store.dispatch('checkToken').then(response => {
+                        //     if (response == 'success') {
+                        //         next()
+                        //     }
+                        //     else {
+                        //         next('/')
+                        //     }
+                        // }, error => {
+                        //     next('/')
+                        // })
                     }
                 },
                 {
@@ -146,16 +172,22 @@ const router = new Router({
                     },
                     component: () => import('./views/users/Edit.vue'),
                     beforeEnter(to, from, next) {
-                        store.dispatch('checkToken').then(response => {
-                            if (response == 'success') {
-                                next()
-                            }
-                            else {
-                                next('/')
-                            }
-                        }, error => {
+                        const token = $cookies.get("token")
+                        if (!token) {
                             next('/')
-                        })
+                        } else {
+                            next()
+                        }
+                        // store.dispatch('checkToken').then(response => {
+                        //     if (response == 'success') {
+                        //         next()
+                        //     }
+                        //     else {
+                        //         next('/')
+                        //     }
+                        // }, error => {
+                        //     next('/')
+                        // })
                     }
                 }
             ]

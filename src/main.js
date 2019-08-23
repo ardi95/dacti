@@ -20,10 +20,13 @@ axios.interceptors.request.use(config => {
 });
 
 // axios.interceptors.response.use(res => {
+//     console.log('main');
 //     console.log('Response Interceptor', res)
 //     return res
 // }, error => {
-//     console.log(error.response);
+//     // console.log('masuk');
+//     $cookies.remove("token")
+//     router.push('/')
 //     return error
 // })
 
