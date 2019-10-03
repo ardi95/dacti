@@ -151,39 +151,16 @@
 import axios from 'axios'
 import { validationMixin } from 'vuelidate'
 import { required, minLength } from 'vuelidate/lib/validators'
+import { userMixin } from '../../mixins/userMixin'
 
 export default {
     data () {
         return {
-            username: '',
-            password: '',
-            name: '',
-            no_pegawai: '',
-            imageName: '',
-            imageFile: '',
-            imageUrl: '',
-            role: [],
-            itemsRole: [],
-            closeImage: false,
-            isActive: false,
             fieldPassword: false
         }
     },
     methods: {
-        pickFile () {
-            console.log(this.$refs);
-            this.$refs.image.click ()
-        },
         onFilePicked (event) {
-            // let image = event.target;
-            // if (image.files && image.files[0]) {
-            //     let reader = new FileReader();
-            //
-            //     const file = event.target.files[0];
-            //     this.imageUrl = URL.createObjectURL(file);
-            //     this.imageFile = file
-            // }
-
             const files = this.$refs.image.files[0];
             if (files !== undefined) {
                 this.imageName = files.name
@@ -262,31 +239,11 @@ export default {
     //     console.log('masuk update')
     // },
     computed: {
-        isItemRole() {
-            return this.$store.getters.isRole
-        },
-        usernameErrors() {
-            // const errors = []
-            // if (!this.$v.username.$dirty) return errors
-            // !this.$v.username.required && errors.push('Username is required')
-            // return errors
-            if (this.$v.username.$error) {
-                if (!this.$v.username.required) {
-                    return 'Username is required'
-                }
-            }
-        },
         passwordErrors() {
             const errors = []
             if (!this.$v.password.$dirty) return errors
             !this.$v.password.required && errors.push('Password is required')
             !this.$v.password.minLen && errors.push('minimum of 8 characters')
-            return errors
-        },
-        nameErrors() {
-            const errors = []
-            if (!this.$v.name.$dirty) return errors
-            !this.$v.name.required && errors.push('Name is required')
             return errors
         },
         errorResultUser: {
@@ -324,7 +281,8 @@ export default {
         name: {
             required
         }
-    }
+    },
+    mixins: [userMixin]
 }
 </script>
 

@@ -6,7 +6,10 @@ import router from '../router'
 const state = {
     errorResult: false,
     errorMessage: null,
-    token: null
+    token: null,
+    nameUser: null,
+    urlImgProfile: null,
+    roleAdmin: false
 }
 
 const mutations = {
@@ -22,12 +25,26 @@ const mutations = {
     clearAuthData(state) {
         $cookies.remove("token")
         state.token = null
+        state.roleAdmin = false
+        state.nameUser = null
+        state.urlImgProfile = null
         router.replace('/')
+    },
+    processDetailUser(state, user) {
+        state.nameUser = user.name
+        state.urlImgProfile = user.photo
+    },
+    processRole(state, roles) {
+        let forRole = roles.map(role => {
+            if (role == 1) {
+                state.roleAdmin = true
+            }
+        });
     }
 }
 
 const actions = {
-    login({commit}, data) {
+    login({commit, dispatch}, data) {
         axios.post('/login',
         {
             email: data.username,
@@ -37,7 +54,7 @@ const actions = {
             commit('processToken', {
                 token: res.data.token
             })
-            // console.log(res);
+            dispatch('updateDetailUser')
         })
         .catch(error => {
             const dataError = error.response.data
@@ -101,6 +118,16 @@ const actions = {
         .catch(error => {
             commit('clearAuthData')
         })
+    },
+    updateDetailUser({commit}) {
+        axios.get('/detail-user')
+        .then(res => {
+            commit('processDetailUser', res.data.user)
+            commit('processRole', res.data.role)
+        })
+        .catch(error => {
+            console.log(error.response);
+        })
     }
 }
 
@@ -114,6 +141,15 @@ const getters =  {
     errorMessage(state) {
         return state.errorMessage
     },
+    isNameUser(state) {
+        return state.nameUser
+    },
+    isUrlImgProfile(state) {
+        return state.urlImgProfile
+    },
+    isRoleAdmin(state) {
+        return state.roleAdmin
+    }
 }
 
 export default {

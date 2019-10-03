@@ -169,6 +169,7 @@ const router = new Router({
                                 href: '/users/edit/'
                             }
                         ]
+                        // title: route => `dynamic title is ${route.query.param}`
                     },
                     component: () => import('./views/users/Edit.vue'),
                     beforeEnter(to, from, next) {
@@ -194,6 +195,10 @@ const router = new Router({
         }
     ]
 })
+
+// router.beforeEach((to, from, next) => {
+//     next();
+// });
 
 router.afterEach((to, from) => {
     store.dispatch('createTitle')

@@ -11,18 +11,16 @@ const mutations = {
         state.title = router.currentRoute.matched[0].meta.title
     },
     mutationCreateBreadcrumb(state) {
-        let tempStateBreadcrumbs = router.currentRoute.meta.breadcrumbs
-        // if (router.currentRoute.meta.breadcumbDynamic  == true) {
-        //     let idDynamic = {
-        //         text: router.currentRoute.params.id,
-        //         disabled: true,
-        //         href: '/users/edit/'
-        //     }
-        //
-        //     tempStateBreadcrumbs.push(idDynamic)
-        // }
-        state.breadcrumbs = tempStateBreadcrumbs
-
+        state.breadcrumbs = router.history.current.meta.breadcrumbs
+        if (router.currentRoute.meta.breadcumbDynamic  == true) {
+            let idDynamic = null
+            idDynamic = {
+                text: router.currentRoute.params.id,
+                disabled: true,
+                href: '/users/edit/'
+            }
+            state.breadcrumbs.splice(2, 1, idDynamic);
+        }
     }
 }
 

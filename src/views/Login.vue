@@ -22,7 +22,7 @@
                         </transition>
                         <v-card class="v-card-login">
                             <form class="form-login" @submit.prevent="login">
-                                <h3 class="display-3 font-weight-thin">Login</h3>
+                                <h3 class="display-3 font-weight-thin">Login 2</h3>
                                 <hr class="header-form">
                                 <!-- EMAIL -->
                                 <v-text-field

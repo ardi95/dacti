@@ -41,11 +41,6 @@
                             @click="viewEdit(props.item.id)">
                                 <v-icon dark>edit</v-icon>
                             </v-btn>
-                            <v-btn fab outline
-                            color="error"
-                            to="/users/create">
-                                <v-icon dark>delete</v-icon>
-                            </v-btn>
                         </td>
                     </template>
                 </v-data-table>
@@ -82,8 +77,8 @@ export default {
     watch: {
         pagination: {
             handler () {
-                let checkCall = 'nosearch'
-                this.getDataFromApi(checkCall)
+                // let checkCall = 'nosearch'
+                this.getDataFromApi()
                 .then(data => {
                     this.desserts = data.items
                     this.totalDesserts = data.total
@@ -92,9 +87,9 @@ export default {
             deep: true
         },
         search(newValue) {
-            this.updatePaginationSearch()
-            let checkCall = 'search'
-            this.getDataFromApi(checkCall)
+            // this.updatePaginationSearch()
+            // let checkCall = 'search'
+            this.getDataFromApi()
             .then(data => {
                 this.desserts = data.items
                 this.totalDesserts = data.total
@@ -111,16 +106,17 @@ export default {
     },
     methods: {
         updatePaginationSearch () {
-            this.pagination.page = 1
+            // this.pagination.page = 1
         },
-        getDataFromApi (checkCall) {
+        getDataFromApi () {
             this.loading = true
             return new Promise((resolve, reject) => {
+                // console.log(this.search);
                 let { sortBy, descending, page, rowsPerPage } = this.pagination
 
-                if (checkCall == 'search') {
-                    page = 1
-                }
+                // if (checkCall == 'search') {
+                //     page = 1
+                // }
 
                 let valueSearch = this.search
                 let items

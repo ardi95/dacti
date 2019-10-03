@@ -15,11 +15,15 @@
 </template>
 
 <script>
+import router from '../router'
+
 export default {
     computed: {
         breadcrumbs() {
             return this.$store.getters.breadcrumbs
         }
+    }, created() {
+        // console.log(router);
     }
 }
 </script>
